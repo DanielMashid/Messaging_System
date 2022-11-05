@@ -4,6 +4,6 @@ from . import views
 # from .views import api_home
 
 urlpatterns = [
-    path('', views.api_home),
+    path('', views.MessagingHandler.api_home),
      # localhost:8000/api/
 ]
