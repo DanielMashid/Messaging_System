@@ -1,10 +1,13 @@
-from django.urls import path
-
+from django.urls import path, include
+from rest_framework import routers
 from . import views
 # from .views import api_home
 
+router = routers.DefaultRouter()
+router.register("message", views.MessageViewSet, basename="message")
+
 urlpatterns = [
-    path('', views.MessagingHandler.api_home), # localhost:8000/
+    path('', include(router.urls)), # localhost:8000/
     path('write_message', views.MessagingHandler.write_new_message),
     path('get_messages', views.MessagingHandler.get_messages),
     path('get_unread_messages', views.MessagingHandler.get_all_unread_messages_from_specific_user),

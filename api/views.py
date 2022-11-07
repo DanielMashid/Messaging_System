@@ -1,12 +1,12 @@
-import json
-from rest_framework.views import APIView
-from django.http import JsonResponse
-from rest_framework import authentication, generics, permissions
-
-from api.serializers import WriteMessageSerializer, DisplayMessageSerializer
 from api.models import Message
-from rest_framework import status
+from api.serializers import WriteMessageSerializer, DisplayMessageSerializer, MessageSerializer
+from django.http import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import authentication, generics, permissions
+from rest_framework import status, viewsets, filters
 from rest_framework.response import Response
+from rest_framework.views import APIView
+import json
 
 class MessagingHandler(APIView):
     # authentication
@@ -46,7 +46,7 @@ class MessagingHandler(APIView):
             return Response({"message": "The message was sent successfully"}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     # helper
     def get_messages(self, user, only_receiver=True, only_unread_messages=False):
         queryset = (Message.objects.filter(receiver = user).filter(deleted_by_receiver=False))
@@ -99,4 +99,12 @@ class MessagingHandler(APIView):
         return Response({"detail": "Message deleted successfully"}, status=status.HTTP_200_OK)
 
 
+class MessageViewSet(viewsets.ModelViewSet):
+    serializer_class = MessageSerializer
+    filter_backends = [DjangoFilterBackend]
+    # queryset = Message.objects.all()
+    filterset_fields = ['id', 'sender', 'receiver']
+    
+    def get_queryset(self):
+        return Message.objects.all()
 

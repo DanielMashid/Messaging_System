@@ -7,6 +7,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username"]
 
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = "__all__"
+
 class WriteMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
