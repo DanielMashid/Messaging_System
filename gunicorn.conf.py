@@ -1,6 +1,6 @@
 import os
 
-name = os.getenv("GUNICORN_NAME", "messages-system-handler")
+name = os.getenv("GUNICORN_NAME", "messages-handler")
 workers = os.getenv("GUNICORN_WORKERS", 2)
 threads = os.getenv("GUNICORN_THREADS", 4)
 worker_class = 'gthread'
