@@ -10,7 +10,7 @@ import json
 
 class MessagingHandler(APIView):
     # authentication
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.SessionAuthentication, authentication.BaseAuthentication]
     permissions_classes = [permissions.IsAuthenticated]
 
     def api_home(request, *args, **kwargs):
