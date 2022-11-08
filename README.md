@@ -19,12 +19,10 @@ Each message contains the following fields:
 ### This project was built with:
 - Python, Django.
 - Heroku's hosted server.
+- Database with postgresql
 - Postman.
 
-Server's link : <TBD>
+Server's link - https://messaging-system-daniel.herokuapp.com/
 email: danielmashid1@gmail.com
-admin: daniel
-password: 1234
-
-### How to use?
-<TBD>
+admin: danieladmin
+password: danieladmin
