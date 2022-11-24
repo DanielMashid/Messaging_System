@@ -8,8 +8,6 @@ from rest_framework.authtoken.models import Token
 
 @api_view(['POST',])
 def registration_view(request):
-    
-    if request.method == 'POST':
         serializer = RegistrationSerializer(data=request.data)
         data = {}
         if serializer.is_valid():

@@ -20,7 +20,7 @@ class MessagingHandler():
         print("current_user--> ", current_user)
         serializer = MessageSerializer(data = request.data)
         print("data--> ",serializer)
-        if not serializer.is_valid():
+        if serializer.is_valid():
             new_message = Message.objects.create(
                 sender = current_user,
                 receiver = request.data['receiver'],
