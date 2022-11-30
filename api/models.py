@@ -1,8 +1,11 @@
 from django.db import models
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
+from messages_handler.settings import AUTH_USER_MODEL
 
 class Message(models.Model):
-    sender = models.CharField(max_length=100, help_text="The sender of the message.")
+    id = models.AutoField(primary_key=True)
+    # sender = models.CharField(max_length=100, help_text="The sender of the message.")
+    sender = models.ForeignKey(AUTH_USER_MODEL, related_name="sent_messages", help_text="Sender of the message", on_delete=models.CASCADE)
     receiver = models.CharField(max_length=100, help_text="The receiver of message.")
     subject = models.CharField(max_length=100, help_text="The subject of the message.")
     message_content = models.CharField(max_length=1000, help_text="The content of the message")
