@@ -23,6 +23,6 @@ Each message contains the following fields:
 - Postman.
 
 Server's link - https://messaging-system-daniel.herokuapp.com/
-email: danielmashid1@gmail.com
-admin: danieladmin
-password: danieladmin
+email: daniel@daniel.com
+admin: daniel
+password: daniel
