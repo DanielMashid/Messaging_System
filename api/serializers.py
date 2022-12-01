@@ -14,8 +14,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def save(self):
         message = Message(
-                        sender = User.get_username,
-                        receiver = self.validated_data['username'],
+                        sender = self.validated_data['sender'],
+                        receiver = self.validated_data['receiver'],
                         subject = self.validated_data['subject'],
                         message_content = self.validated_data['message_content'],
                     )

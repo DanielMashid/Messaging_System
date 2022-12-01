@@ -6,10 +6,10 @@ from account.serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
 
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.contrib.auth.hashers import check_password
-from account.models import Account
+# from django.contrib.auth.hashers import check_password
+# from account.models import Account
+# from django.contrib.auth.models import User
+# from django.core.exceptions import ValidationError
 
 @api_view(['POST',])
 def registration_view(request):
@@ -24,7 +24,13 @@ def registration_view(request):
             data['token'] = token
         else:
             data = serializer.errors
-        return Response(data)
+        return Response(data)      
+
+@api_view(['GET'])
+def logout_view(request):
+    logout(request)
+    return Response("You logout from the system!!", status=status.HTTP_200_OK)        
+
 
 # @api_view(['POST'])
 # def login_view(request):
@@ -39,14 +45,6 @@ def registration_view(request):
 #     else:
 #         return Response("You ("+username+") have not logged in successfully")
 
-# @api_view(['GET'])
-# def logout_view(request):
-#     user = request.user
-#     print("user before --> ", user)
-#     logout(request)
-#     user = request.user
-#     print("user after --> ", user)
-#     return Response("You logout from the system!!", status=status.HTTP_200_OK)        
 
 
 

@@ -10,11 +10,6 @@ class MessagingHandler():
 
     @api_view(['GET'])
     def home_page(request):
-        print("in home page")
-        if request.user.is_authenticated:
-            print("Logged in")
-        else:
-            print("Not logged in")
         return Response({"Welcome to Home Page !!"}, status=status.HTTP_200_OK)
 
     @api_view(['POST'])
@@ -25,7 +20,7 @@ class MessagingHandler():
         print("data--> ",serializer)
         if serializer.is_valid():
             new_message = Message.objects.create(
-                sender = current_user,
+                sender = request.data['sender'],
                 receiver = request.data['receiver'],
                 subject = request.data['subject'],
                 message_content = request.data['message_content'],
@@ -36,67 +31,49 @@ class MessagingHandler():
             return Response("Could not send message. Error is : " + str(serializer.errors), status=status.HTTP_400_BAD_REQUEST)
     
     @api_view(['GET'])
-    def get_messages_from_specific_user(request):
-        print("request = ",request.GET["user"])
-        # user = request.GET["user"]
-        current_user = request.user
-        # print("User = ",user)
+    def get_messages_for_specific_user(request):
+        current_user = request.data['receiver']
         messages = Message.objects.filter(receiver = current_user)
         serializer = MessageSerializer(list(messages), many = True)
-        # if serializer.is_valid():
-        #     messages.update(is_read = True)
-        # messages.update()
+        messages.update(is_read = True)
+        messages.update()
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # else:
-        #     return Response({"message": "serializer is not valid"}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @api_view(['GET'])
-    def get_all_unread_messages_from_specific_user(request):
-        user = request.GET["user"]
-        # print("user=", user)
-        unread_messages = Message.objects.filter(receiver = user, is_read=False)
-        # print(">>>Unread messages: ", unread_messages.values() )
+    def get_all_unread_messages_for_specific_user(request):
+        current_user = request.data['receiver']
+        unread_messages = Message.objects.filter(receiver = current_user, is_read=False)
         if(not unread_messages.exists()):
                 return Response("No new unread messages", status=status.HTTP_200_OK) 
         serializer = MessageSerializer(list(unread_messages), many=True)
-        # print("Serializer: ", serializer.data)
-        # if serializer.is_valid():
         unread_messages.update(is_read = True)
-        # unread_messages.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # else:
-        #     return Response({"message": "serializer is not valid"}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['GET'])
-    def get_message_by_id(request, id):
-        print("in function get_message_by_id")
-        user = request.GET["user"]
-        print("user = ", user)
-        messages = Message.objects.filter(receiver = user)| Message.objects.filter(sender = user)
+    def get_message_by_id(request):
+        current_user_name = request.data['receiver']
+        current_message_id = request.data['id']
+        print("current_user_name = ", current_user_name)
+        print("current_user_id = ", current_message_id)
+        messages = Message.objects.filter(receiver = current_user_name) | Message.objects.filter(sender = current_user_name)
         print("messages = ", messages.values())
-        # messages = get_messages(request.data['User'], only_receiver=False)
-        print("before se")
         try:
-          unique_message = messages.get(id=id)
+          unique_message = messages.get(id=current_message_id)
         except Message.DoesNotExist:
             return Response({"detail": "Could not find such message."}, status=status.HTTP_200_OK)
-        if unique_message.receiver.id == user and not unique_message.is_read:
+        if unique_message.receiver == current_message_id and not unique_message.is_read:
             unique_message.is_read = True
             unique_message.update()
         serializer = MessageSerializer(unique_message)
-        # if serializer.is_valid():
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # else:
-        #     return Response({"message": "Something went wrong :("}, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['GET', 'POST'])
-    def delete_message_by_id(request, id): 
-        # print("in function delete_message_by_id")
-        user = request.GET["user"]
-        messages = Message.objects.filter(receiver = user)| Message.objects.filter(sender = user)
-        # print("messages --> ", messages)
+    def delete_message_by_id(request): 
+        current_user_name = request.data['receiver']
+        current_message_id = request.data['id']
+        messages = Message.objects.filter(receiver = current_user_name)| Message.objects.filter(sender = current_user_name)
         try:
-          unique_message_to_delete = messages.get(id=id)
+          unique_message_to_delete = messages.get(id=current_message_id)
         except Message.DoesNotExist:
             return Response({"detail": "Could not find message."}, status=status.HTTP_200_OK)
         unique_message_to_delete.delete()
