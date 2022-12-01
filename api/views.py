@@ -5,8 +5,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
-from account import models
-
 @csrf_exempt
 class MessagingHandler():
 
@@ -21,7 +19,7 @@ class MessagingHandler():
 
     @api_view(['POST'])
     def write_new_message(request):
-        current_user = models.AccountAuthBackend.get_user(request.email)
+        current_user = request.user
         print("current_user--> ", current_user)
         serializer = MessageSerializer(data = request.data)
         print("data--> ",serializer)
