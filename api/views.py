@@ -4,19 +4,24 @@ from api.serializers import MessageSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
+from account import models
 
-# @csrf_exempt
+@csrf_exempt
 class MessagingHandler():
 
     @api_view(['GET'])
     def home_page(request):
         print("in home page")
+        if request.user.is_authenticated:
+            print("Logged in")
+        else:
+            print("Not logged in")
         return Response({"Welcome to Home Page !!"}, status=status.HTTP_200_OK)
 
     @api_view(['POST'])
     def write_new_message(request):
-        current_user = request.user
+        current_user = models.AccountAuthBackend.get_user(request.email)
         print("current_user--> ", current_user)
         serializer = MessageSerializer(data = request.data)
         print("data--> ",serializer)
